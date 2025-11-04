@@ -3,9 +3,9 @@ node_modules/
 
 # Arquivos gerados pelo Marp
 *.html
+!index.html
 *.pptx
 slides-devpr-comunidade-reveal.html
-index.html
 _site/
 
 # Arquivos temporários

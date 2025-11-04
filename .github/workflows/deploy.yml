@@ -34,9 +34,13 @@ jobs:
       - name: Build HTML
         run: |
           echo "🔨 Gerando HTML dos slides..."
-          # Gera o HTML diretamente como index.html
-          npx @marp-team/marp-cli slides-devpr-comunidade.md --html index.html --allow-local-files
-          echo "✅ HTML gerado com sucesso!"
+          # Gera o HTML
+          npx @marp-team/marp-cli slides-devpr-comunidade.md --html --allow-local-files
+          # Renomeia para index.html
+          if [ -f slides-devpr-comunidade.html ]; then
+            mv slides-devpr-comunidade.html index.html
+          fi
+          echo "✅ HTML gerado com sucesso: index.html"
 
       - name: Prepare build artifacts
         run: |
