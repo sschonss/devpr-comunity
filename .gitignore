@@ -1,0 +1,23 @@
+# Dependências
+node_modules/
+package-lock.json
+
+# Arquivos gerados pelo Marp
+*.html
+*.pptx
+slides-devpr-comunidade-reveal.html
+index.html
+_site/
+
+# Arquivos temporários
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Arquivos de Media Kit (opcional - descomente se não quiser versionar)
+# 1_Media Kit DevPR 2025.pdf
+# 2_Media Kit - DevParaná na Estrada 2025.pdf
+
+# Mantém o PDF final (comente se não quiser versionar)
+# !slides-devpr-comunidade.pdf

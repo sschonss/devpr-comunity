@@ -1,0 +1,88 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build HTML
+        run: |
+          echo "🔨 Gerando HTML dos slides..."
+          npx @marp-team/marp-cli slides-devpr-comunidade.md --html --allow-local-files
+          # Renomeia para index.html para o GitHub Pages
+          mv slides-devpr-comunidade.html index.html
+          echo "✅ HTML gerado com sucesso!"
+
+      - name: Prepare build artifacts
+        run: |
+          echo "📦 Preparando artefatos para deploy..."
+          mkdir -p _site
+          # Copia o HTML gerado
+          cp index.html _site/
+          # Copia todas as imagens necessárias
+          cp logo-dev-parana.png _site/ 2>/dev/null || true
+          cp esse-sou-eu.jpg _site/ 2>/dev/null || true
+          cp palestrantes.png _site/ 2>/dev/null || true
+          cp cidades-2025.png _site/ 2>/dev/null || true
+          cp nosso-publico.png _site/ 2>/dev/null || true
+          cp nossos-eventos.png _site/ 2>/dev/null || true
+          echo "✅ Artefatos preparados!"
+          ls -la _site/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: _site/
+          retention-days: 1
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: _site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
