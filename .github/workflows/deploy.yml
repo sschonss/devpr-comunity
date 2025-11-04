@@ -34,17 +34,27 @@ jobs:
       - name: Build HTML
         run: |
           echo "🔨 Gerando HTML dos slides..."
-          npx @marp-team/marp-cli slides-devpr-comunidade.md --html --allow-local-files
-          # Renomeia para index.html para o GitHub Pages
-          mv slides-devpr-comunidade.html index.html
+          # Gera o HTML diretamente como index.html
+          npx @marp-team/marp-cli slides-devpr-comunidade.md --html index.html --allow-local-files
           echo "✅ HTML gerado com sucesso!"
 
       - name: Prepare build artifacts
         run: |
           echo "📦 Preparando artefatos para deploy..."
+          # Limpa e cria diretório de saída
+          rm -rf _site
           mkdir -p _site
-          # Copia o HTML gerado
-          cp index.html _site/
+          # Copia o HTML gerado (index.html) - tem prioridade no GitHub Pages
+          if [ -f index.html ]; then
+            cp index.html _site/
+            echo "✅ index.html copiado"
+          elif [ -f slides-devpr-comunidade.html ]; then
+            cp slides-devpr-comunidade.html _site/index.html
+            echo "✅ slides-devpr-comunidade.html renomeado para index.html"
+          else
+            echo "❌ Erro: Nenhum HTML encontrado!"
+            exit 1
+          fi
           # Copia todas as imagens necessárias
           cp logo-dev-parana.png _site/ 2>/dev/null || true
           cp esse-sou-eu.jpg _site/ 2>/dev/null || true
@@ -52,7 +62,10 @@ jobs:
           cp cidades-2025.png _site/ 2>/dev/null || true
           cp nosso-publico.png _site/ 2>/dev/null || true
           cp nossos-eventos.png _site/ 2>/dev/null || true
+          # Garante que não há README.md no _site
+          rm -f _site/README.md
           echo "✅ Artefatos preparados!"
+          echo "📄 Arquivos no _site:"
           ls -la _site/
 
       - name: Upload build artifacts
