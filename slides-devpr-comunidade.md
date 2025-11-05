@@ -144,7 +144,7 @@ Nossa missão é fomentar aprendizado contínuo, colaboração e oportunidades a
 
 <!-- Slide 6: Fotos dos Eventos -->
 
-![bg contain](nossos-eventos.png)
+![bg 90%](nossos-eventos.png)
 
 ---
 
