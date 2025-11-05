@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build:html": "marp slides-devpr-comunidade.md --html slides-devpr-comunidade-reveal.html",
+    "build:html": "marp slides-devpr-comunidade.md --html slides-devpr-comunidade.html && cp slides-devpr-comunidade.html index.html",
     "build:pdf": "marp slides-devpr-comunidade.md --pdf slides-devpr-comunidade.pdf --allow-local-files",
     "build:pptx": "marp slides-devpr-comunidade.md --pptx slides-devpr-comunidade.pptx --allow-local-files",
     "build": "npm run build:html && npm run build:pdf && npm run build:pptx",
